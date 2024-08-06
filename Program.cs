@@ -20,7 +20,7 @@ app.MapGet("/ping", () =>
 {
     return "pong";
 })
-.WithName("GetWeatherForecast")
+.WithName("Ping")
 .WithOpenApi();
 
 app.Run();
