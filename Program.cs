@@ -1,4 +1,22 @@
+using Azure.Identity;
+using Azure.Core;
+using Microsoft.Extensions.Azure;
+using Microsoft.Azure.Cosmos;
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+// builder.Services.AddAzureClients(clientBuilder =>
+// {
+//     clientBuilder.AddClient(new CosmosClient());
+//     clientBuilder.UseCredential(new DefaultAzureCredential());
+// });
+
+
+// New instance of CosmosClient class using a connection string
+using CosmosClient client = new(
+    connectionString: Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING")!
+);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -15,6 +33,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+
+
 
 var summaries = new[]
 {
