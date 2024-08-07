@@ -1,8 +1,5 @@
-using Azure.Identity;
-using Azure.Core;
 using Microsoft.Extensions.Azure;
 using Microsoft.Azure.Cosmos;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +32,15 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
+app.MapGet("/test", () =>
+{
+    Console.WriteLine("Running read test...");
+    Incident.Incident incident = new("123");
+
+    return incident;
+})
+.WithName("Test")
+.WithOpenApi();
 
 
 var summaries = new[]
