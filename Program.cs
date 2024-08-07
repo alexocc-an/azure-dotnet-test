@@ -1,3 +1,6 @@
+using Azure.Identity;
+using Microsoft.Azure.Cosmos;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,6 +17,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// CosmosClient client = new(
+//     accountEndpoint: builder.Configuration["AZURE_COSMOS_DB_NOSQL_ENDPOINT"]!,
+//     tokenCredential: new DefaultAzureCredential()
+// );
+// Database database = client.GetDatabase("test");
+// Container container = database.GetContainer("test");
+
+app.UseDeveloperExceptionPage();
+
 app.UseHttpsRedirection();
 
 app.MapGet("/ping", () =>
@@ -22,5 +34,7 @@ app.MapGet("/ping", () =>
 })
 .WithName("Ping")
 .WithOpenApi();
+
+
 
 app.Run();
