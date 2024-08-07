@@ -11,9 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // New instance of CosmosClient class using a connection string
-// using CosmosClient client = new(
-//     connectionString: Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING")!
-// );
+using CosmosClient client = new(
+    connectionString: Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING")!
+);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
