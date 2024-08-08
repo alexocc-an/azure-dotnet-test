@@ -1,5 +1,8 @@
 using Microsoft.Extensions.Azure;
 using Microsoft.Azure.Cosmos;
+using IncidentRecord;
+using Microsoft.OpenApi.Any;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,12 +35,40 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapGet("/test", () =>
+app.MapGet("/test", async () =>
 {
     Console.WriteLine("Running read test...");
-    Incident.Incident incident = new("123");
+    Database db = client.GetDatabase("test");
+    Container container = db.GetContainer("test");
 
-    return incident;
+    using FeedIterator<Incident> feed = container.GetItemQueryIterator<Incident>(
+        queryText: "SELECT * FROM incidents i"
+    );
+
+    List<Incident> incidents = [];
+    List<string> queryLog = [];
+    int numQueries = 0;
+
+    // Return all paginated results
+    while (feed.HasMoreResults)
+    {
+
+        FeedResponse<Incident> response = await feed.ReadNextAsync();
+        queryLog.Add($"Got {response.Count} incidents from query number: {++numQueries}");
+
+        // Iterate query results
+        foreach (Incident i in response)
+        {
+            incidents.Add(i);
+        }
+    }
+
+    queryLog.Add($"Fetched {incidents.Count} incidents in {numQueries} queries from Cosmos\n");
+
+    queryLog.Add(incidents.Count == 0 ? "no incident data" : incidents[0].ToString());
+
+    queryLog.ForEach(Console.WriteLine);
+    return string.Join('\n', queryLog);
 })
 .WithName("Test")
 .WithOpenApi();
